@@ -11,6 +11,8 @@ const checkoutLinks = {
   ngnRegular: process.env.NEXT_PUBLIC_NGN_REGULAR_URL || "#checkout-placeholder",
   ngnVip: process.env.NEXT_PUBLIC_NGN_VIP_URL || "#checkout-placeholder",
 };
+
+type Currency = "USD" | "NGN";
 const weeks = [
   { icon: "01", title: "Your Senior Consulting Offer", days: "Days 1–7", deliverable: "The Senior Offer Suite", text: "Define the expertise you are monetizing, identify the client with the expensive problem you solve, and package a high-ticket offer priced for ROI.", bullets: ["The senior consultant mindset shift", "Your expertise and ideal client", "Pricing for the expensive problem", "Proof portfolios and case studies"] },
   { icon: "02", title: "Authority & Visibility", days: "Days 8–14", deliverable: "LinkedIn Overhaul + First Post", text: "Build the digital presence that makes decision-makers take you seriously before you ever send a message.", bullets: ["Personal branding strategy", "LinkedIn profile mastery", "AI-assisted thought leadership", "Organic networking"] },
@@ -73,8 +75,20 @@ function useEarlyBirdStatus() {
   return isEarlyBird;
 }
 
+function useVisitorCurrency(): Currency {
+  const [currency, setCurrency] = useState<Currency>("USD");
+  useEffect(() => {
+    const country = document.cookie.match(/(?:^|; )visitor-country=([^;]+)/)?.[1];
+    const visitorCurrency = country === "NG" ? "NGN" : "USD";
+    setCurrency(visitorCurrency);
+    document.documentElement.dataset.currency = visitorCurrency;
+  }, []);
+  return currency;
+}
+
 function Cta({ children = "Enroll now" }: { children?: React.ReactNode }) {
-  return <a className="cta" href="#pricing">{children}<span>Early-bird: $47 USD · ₦25,000 NGN</span></a>;
+  const currency = useVisitorCurrency();
+  return <a className="cta" href="#pricing">{children}<span>{currency === "NGN" ? "Early-bird: ₦25,000 · Nigeria" : "Early-bird: $47 · International"}</span></a>;
 }
 
 export default function Home() {
@@ -93,7 +107,7 @@ export default function Home() {
               <Countdown />
             </div>
             <Cta>Enroll now · Start your build</Cta>
-            <p className="microcopy">Choose your currency at checkout: USD $47 or NGN ₦25,000</p>
+            <p className="microcopy">Your local enrollment price is shown below · Secure hosted checkout</p>
           </div>
           <blockquote>&ldquo;$12,000 client. Week 5.&rdquo;<cite>Bootcamp graduate</cite></blockquote>
         </div>
@@ -131,10 +145,11 @@ export default function Home() {
 
 function PricingSection() {
   const isEarlyBird = useEarlyBirdStatus();
+  const currency = useVisitorCurrency();
   const usdPrice = isEarlyBird ? "$47" : "$97";
   const ngnPrice = isEarlyBird ? "₦25,000" : "₦35,000";
   const usdUrl = isEarlyBird ? checkoutLinks.usdEarlyBird : checkoutLinks.usdRegular;
   const ngnUrl = isEarlyBird ? checkoutLinks.ngnEarlyBird : checkoutLinks.ngnRegular;
   const priceLabel = isEarlyBird ? "Early-bird price · Ends September 3rd" : "Regular enrollment price";
-  return <section className="pricing-section" id="pricing"><div className="section-heading"><p className="section-label">Your investment</p><h2>Choose your currency. {isEarlyBird ? "Lock in your early-bird rate." : "Enrollment is at the regular rate."}</h2><p>{isEarlyBird ? "Price increases at midnight on September 3rd." : "Early-bird enrollment has closed."}</p></div><div className="pricing-grid"><article className="price-card"><p className="section-label">International enrollment</p><p className="processor">Checkout via Stripe</p><p className="was">{isEarlyBird ? "$97" : ""}</p><p className="price">{usdPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={usdUrl}>Enroll for {usdPrice} <span>Secure USD checkout</span></a><a className="vip-link" href={checkoutLinks.usdVip}>Add VIP upgrade · +$47</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article><article className="price-card"><p className="section-label">Nigeria enrollment</p><p className="processor">Checkout via Paystack</p><p className="was">{isEarlyBird ? "₦35,000" : ""}</p><p className="price">{ngnPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={ngnUrl}>Enroll for {ngnPrice} <span>Secure NGN checkout</span></a><a className="vip-link" href={checkoutLinks.ngnVip}>Add VIP upgrade · +₦15,000</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article></div><p className="disclaimer">Results mentioned are not typical. Individual results will vary based on experience, effort, and market conditions.</p></section>;
+  return <section className="pricing-section" id="pricing"><div className="section-heading"><p className="section-label">Your investment · {currency === "NGN" ? "Nigeria" : "International"}</p><h2>Choose your currency. {isEarlyBird ? "Lock in your early-bird rate." : "Enrollment is at the regular rate."}</h2><p>{isEarlyBird ? "Price increases at midnight on September 3rd." : "Early-bird enrollment has closed."}</p></div><div className="pricing-grid"><article className="price-card"><p className="section-label">International enrollment</p><p className="processor">Checkout via Stripe</p><p className="was">{isEarlyBird ? "$97" : ""}</p><p className="price">{usdPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={usdUrl}>Enroll for {usdPrice} <span>Secure USD checkout</span></a><a className="vip-link" href={checkoutLinks.usdVip}>Add VIP upgrade · +$47</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article><article className="price-card"><p className="section-label">Nigeria enrollment</p><p className="processor">Checkout via Paystack</p><p className="was">{isEarlyBird ? "₦35,000" : ""}</p><p className="price">{ngnPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={ngnUrl}>Enroll for {ngnPrice} <span>Secure NGN checkout</span></a><a className="vip-link" href={checkoutLinks.ngnVip}>Add VIP upgrade · +₦15,000</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article></div><p className="disclaimer">Results mentioned are not typical. Individual results will vary based on experience, effort, and market conditions.</p></section>;
 }
