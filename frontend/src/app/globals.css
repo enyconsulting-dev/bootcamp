@@ -157,6 +157,22 @@ details p { margin-top: 12px; color: var(--gray); font: 15px/1.6 Arial, sans-ser
 footer { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; padding: 28px 32px; background: #101b31; color: #aeb9ca; font: 12px Arial, sans-serif; }
 footer p { color: white; }
 footer a { text-decoration: none; }
+.thank-you-page { min-height: 100vh; display: grid; place-items: center; padding: 40px 20px; background: var(--navy); }
+.thank-you-card { width: min(100%, 760px); padding: 58px clamp(24px, 7vw, 76px); background: white; text-align: center; box-shadow: 0 28px 80px #0b142b80; }
+.success-mark { display: grid; place-items: center; width: 68px; height: 68px; margin: 22px auto; border: 2px solid var(--gold); border-radius: 50%; color: var(--gold); font: 700 34px Arial, sans-serif; }
+.thank-you-card h1 { color: var(--navy); font-size: clamp(42px, 6vw, 64px); }
+.thank-you-lede { max-width: 540px; margin: 22px auto 0; color: var(--gray); font: 17px/1.65 Arial, sans-serif; }
+.next-steps { display: grid; gap: 0; margin: 42px 0 28px; border-top: 1px solid #dfe3e9; text-align: left; }
+.next-steps > div { display: flex; gap: 18px; padding: 20px 0; border-bottom: 1px solid #dfe3e9; }
+.next-steps span { color: var(--gold); font: 700 13px Arial, sans-serif; }
+.next-steps h2 { margin: 0; color: var(--navy); font-size: 21px; }
+.next-steps p { margin-top: 6px; color: var(--gray); font: 14px/1.5 Arial, sans-serif; }
+.order-status { display: grid; gap: 5px; margin-top: 30px; padding: 18px; background: var(--mist); text-align: left; }
+.order-status span, .order-status small { color: var(--gray); font: 11px Arial, sans-serif; text-transform: uppercase; letter-spacing: .08em; }
+.order-status strong { color: var(--navy); font: 700 17px Arial, sans-serif; }
+.support { margin-top: 30px; color: var(--gray); font: 13px Arial, sans-serif; }
+.support a { color: var(--coral); }
+.return-link { display: inline-block; margin-top: 22px; color: var(--navy); font: 700 13px Arial, sans-serif; text-decoration: underline; }
 
 @media (max-width: 700px) {
   .hero-inner { padding: 24px 20px 54px; }
