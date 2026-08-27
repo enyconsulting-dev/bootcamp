@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 
 const earlyBirdDeadline = new Date("2026-09-03T23:59:00+01:00").getTime();
+const checkoutLinks = {
+  usdEarlyBird: process.env.NEXT_PUBLIC_USD_EARLY_BIRD_URL || "#checkout-placeholder",
+  usdRegular: process.env.NEXT_PUBLIC_USD_REGULAR_URL || "#checkout-placeholder",
+  usdVip: process.env.NEXT_PUBLIC_USD_VIP_URL || "#checkout-placeholder",
+  ngnEarlyBird: process.env.NEXT_PUBLIC_NGN_EARLY_BIRD_URL || "#checkout-placeholder",
+  ngnRegular: process.env.NEXT_PUBLIC_NGN_REGULAR_URL || "#checkout-placeholder",
+  ngnVip: process.env.NEXT_PUBLIC_NGN_VIP_URL || "#checkout-placeholder",
+};
 const weeks = [
   { icon: "01", title: "Your Senior Consulting Offer", days: "Days 1–7", deliverable: "The Senior Offer Suite", text: "Define the expertise you are monetizing, identify the client with the expensive problem you solve, and package a high-ticket offer priced for ROI.", bullets: ["The senior consultant mindset shift", "Your expertise and ideal client", "Pricing for the expensive problem", "Proof portfolios and case studies"] },
   { icon: "02", title: "Authority & Visibility", days: "Days 8–14", deliverable: "LinkedIn Overhaul + First Post", text: "Build the digital presence that makes decision-makers take you seriously before you ever send a message.", bullets: ["Personal branding strategy", "LinkedIn profile mastery", "AI-assisted thought leadership", "Organic networking"] },
@@ -56,6 +64,15 @@ function Countdown() {
   );
 }
 
+function useEarlyBirdStatus() {
+  const [isEarlyBird, setIsEarlyBird] = useState(() => Date.now() < earlyBirdDeadline);
+  useEffect(() => {
+    const timer = window.setInterval(() => setIsEarlyBird(Date.now() < earlyBirdDeadline), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return isEarlyBird;
+}
+
 function Cta({ children = "Enroll now" }: { children?: React.ReactNode }) {
   return <a className="cta" href="#pricing">{children}<span>Early-bird: $47 USD · ₦25,000 NGN</span></a>;
 }
@@ -100,7 +117,7 @@ export default function Home() {
 
       <section className="instructors-section"><div className="section-heading"><p className="section-label">Your instructors</p><h2>Built by someone who&apos;s done it. Taught by someone who&apos;ll be there every day.</h2></div><div className="instructor-grid"><article><div className="portrait">EE</div><p className="section-label">Founder</p><h3>Eno Eka</h3><p>CEO of ENY Consulting Inc. and founder of Consulting School and Business Analysis School. Eno has trained over 100,000 professionals across 90+ countries and led a $6 billion digital transformation.</p><p>She built this bootcamp for talented professionals who are giving their expertise away because they have not packaged what they know.</p></article><article><div className="portrait coach">EE</div><p className="section-label">Lead cohort coach</p><h3>Coach Eno</h3><p>Coach bio and professional headshot will be added before launch. Coach Eno leads the live cohort, reviews your work, and helps you finish what you started.</p></article></div></section>
 
-      <section className="pricing-section" id="pricing"><div className="section-heading"><p className="section-label">Your investment</p><h2>Choose your currency. Lock in your early-bird rate.</h2><p>Price increases at midnight on September 3rd.</p></div><div className="pricing-grid"><article className="price-card"><p className="section-label">International enrollment</p><p className="processor">Checkout via Stripe</p><p className="was">$97</p><p className="price">$47</p><p className="price-note">Early-bird price · Ends September 3rd</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_URL || "#checkout-placeholder"}>Enroll for $47 <span>Stripe checkout link pending</span></a><div className="vip">VIP upgrade +$47 · Hot-seat review, graded workbook, premium templates</div></article><article className="price-card"><p className="section-label">Nigeria enrollment</p><p className="processor">Checkout via Paystack</p><p className="was">₦35,000</p><p className="price">₦25,000</p><p className="price-note">Early-bird price · Ends September 3rd</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={process.env.NEXT_PUBLIC_PAYSTACK_CHECKOUT_URL || "#checkout-placeholder"}>Enroll for ₦25,000 <span>Paystack checkout link pending</span></a><div className="vip">VIP upgrade +₦15,000 · Hot-seat review, graded workbook, premium templates</div></article></div><p className="disclaimer">Results mentioned are not typical. Individual results will vary based on experience, effort, and market conditions.</p></section>
+      <PricingSection />
 
       <section className="guarantee-section"><div className="narrow"><p className="section-label">Our promise to you</p><h2>Do the work. Get the result. That&apos;s the deal.</h2><p>Attend kickoff, complete the four weekly deliverables, show up for at least three Saturday sessions, and submit your capstone. If you still do not have a packaged offer you are confident presenting, contact support within seven days of graduation and we will work with you personally to get there.</p><div className="guarantee-box"><strong>Show up. Build. Graduate.</strong><p>We do not offer refunds for people who do not do the work. We offer results for people who do.</p></div><p className="support">Questions? <a href="mailto:support@businessanalysisschool.com">support@businessanalysisschool.com</a></p></div></section>
 
@@ -110,4 +127,14 @@ export default function Home() {
       <footer><p>30-Day Consulting Offer Bootcamp · A product of ENY Consulting Inc.</p><a href="mailto:support@businessanalysisschool.com">support@businessanalysisschool.com</a><span><a href="#top">Back to top</a> · Privacy policy and terms coming before launch</span></footer>
     </main>
   );
+}
+
+function PricingSection() {
+  const isEarlyBird = useEarlyBirdStatus();
+  const usdPrice = isEarlyBird ? "$47" : "$97";
+  const ngnPrice = isEarlyBird ? "₦25,000" : "₦35,000";
+  const usdUrl = isEarlyBird ? checkoutLinks.usdEarlyBird : checkoutLinks.usdRegular;
+  const ngnUrl = isEarlyBird ? checkoutLinks.ngnEarlyBird : checkoutLinks.ngnRegular;
+  const priceLabel = isEarlyBird ? "Early-bird price · Ends September 3rd" : "Regular enrollment price";
+  return <section className="pricing-section" id="pricing"><div className="section-heading"><p className="section-label">Your investment</p><h2>Choose your currency. {isEarlyBird ? "Lock in your early-bird rate." : "Enrollment is at the regular rate."}</h2><p>{isEarlyBird ? "Price increases at midnight on September 3rd." : "Early-bird enrollment has closed."}</p></div><div className="pricing-grid"><article className="price-card"><p className="section-label">International enrollment</p><p className="processor">Checkout via Stripe</p><p className="was">{isEarlyBird ? "$97" : ""}</p><p className="price">{usdPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={usdUrl}>Enroll for {usdPrice} <span>Secure USD checkout</span></a><a className="vip-link" href={checkoutLinks.usdVip}>Add VIP upgrade · +$47</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article><article className="price-card"><p className="section-label">Nigeria enrollment</p><p className="processor">Checkout via Paystack</p><p className="was">{isEarlyBird ? "₦35,000" : ""}</p><p className="price">{ngnPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={ngnUrl}>Enroll for {ngnPrice} <span>Secure NGN checkout</span></a><a className="vip-link" href={checkoutLinks.ngnVip}>Add VIP upgrade · +₦15,000</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article></div><p className="disclaimer">Results mentioned are not typical. Individual results will vary based on experience, effort, and market conditions.</p></section>;
 }

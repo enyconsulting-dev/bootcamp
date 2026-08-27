@@ -135,6 +135,7 @@ h3 { margin: 9px 0 12px; color: var(--navy); font-size: 25px; }
 .price-card li { position: relative; padding-left: 22px; }
 .price-card li::before { content: "✓"; }
 .price-card .cta { width: 100%; text-align: center; }
+.vip-link { display: block; margin-top: 14px; color: var(--navy); font: 700 13px Arial, sans-serif; text-align: center; text-decoration: underline; }
 .vip { margin-top: 22px; padding: 16px; border: 1px dashed var(--gold); color: var(--gray); font: 13px/1.5 Arial, sans-serif; }
 .disclaimer { margin-top: 28px; color: var(--gray); font: italic 12px Arial, sans-serif; }
 .guarantee-section { padding: 100px 32px; background: var(--mist); }
