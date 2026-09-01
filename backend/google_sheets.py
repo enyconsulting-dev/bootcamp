@@ -121,13 +121,24 @@ class GoogleSheetsClient:
                 data.get("customer_id", ""),
             ]
 
-            # Append row to worksheet
-            worksheet.append_row(row)
+            # Append row to worksheet and retain Google's append response.
+            append_response = worksheet.append_row(
+                row,
+                value_input_option="USER_ENTERED",
+                insert_data_option="INSERT_ROWS",
+            )
+            row_count = len(worksheet.get_all_values())
 
             return {
                 "status": "success",
                 "spreadsheet_id": spreadsheet_id,
+                "spreadsheet_title": spreadsheet.title,
                 "worksheet": worksheet_name,
+                "worksheet_id": worksheet.id,
+                "row_count": row_count,
+                "updated_range": append_response.get("updates", {}).get(
+                    "updatedRange", "unknown"
+                ),
                 "timestamp": row[0],
             }
 
