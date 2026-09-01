@@ -4,6 +4,7 @@ Google Sheets integration for recording enrollment payments.
 
 import os
 import json
+import base64
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timezone
@@ -34,15 +35,20 @@ class GoogleSheetsClient:
                 "or pass credentials_json parameter."
             )
 
-        # Try to parse as JSON first (if it's a JSON string)
+        # Accept raw JSON, base64-encoded JSON, or a local JSON file path.
         try:
-            if creds_source.startswith("{"):
+            if creds_source.lstrip().startswith("{"):
                 creds_dict = json.loads(creds_source)
             else:
-                # Assume it's a file path
-                with open(creds_source, "r") as f:
-                    creds_dict = json.load(f)
-        except (json.JSONDecodeError, FileNotFoundError) as e:
+                try:
+                    decoded_credentials = base64.b64decode(
+                        "".join(creds_source.split()), validate=True
+                    ).decode("utf-8")
+                    creds_dict = json.loads(decoded_credentials)
+                except (ValueError, UnicodeDecodeError, json.JSONDecodeError):
+                    with open(creds_source, "r", encoding="utf-8") as credentials_file:
+                        creds_dict = json.load(credentials_file)
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as e:
             raise ValueError(f"Failed to load Google Sheets credentials: {str(e)}")
 
         self.credentials = Credentials.from_service_account_info(

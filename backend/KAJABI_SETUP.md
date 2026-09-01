@@ -112,6 +112,8 @@ GOOGLE_SHEETS_CREDENTIALS={"type":"service_account","project_id":"...","private_
 GOOGLE_SHEETS_SPREADSHEET_ID=your-sheet-id
 ```
 
+The backend also accepts `GOOGLE_SHEETS_CREDENTIALS` as base64-encoded service-account JSON, which is convenient for Render. Paste the complete base64 value without quotes or line breaks. Do not base64-encode the spreadsheet ID.
+
 **For local development**, use file path:
 ```
 GOOGLE_SHEETS_CREDENTIALS=/path/to/service-account-key.json
