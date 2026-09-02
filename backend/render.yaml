@@ -11,3 +11,5 @@ services:
         sync: false
       - key: PABBLY_WEBHOOK_SECRET
         sync: false
+      - key: REQUIRE_PABBLY_WEBHOOK_SIGNATURE
+        value: "false"

@@ -153,6 +153,7 @@ def _verify_paystack_signature(
 ) -> None:
     paystack_webhook_secret = os.getenv("PAYSTACK_WEBHOOK_SECRET")
     pabbly_webhook_secret = os.getenv("PABBLY_WEBHOOK_SECRET")
+    require_pabbly_signature = os.getenv("REQUIRE_PABBLY_WEBHOOK_SIGNATURE", "false").lower() == "true"
     if not paystack_webhook_secret and not pabbly_webhook_secret:
         logger.warning("Paystack webhook signature verification is disabled")
         return
@@ -164,6 +165,11 @@ def _verify_paystack_signature(
         expected = hmac.new(pabbly_webhook_secret.encode(), raw_body, hashlib.sha256).hexdigest()
         if hmac.compare_digest(pabbly_signature, expected):
             return
+    if pabbly_webhook_secret and not pabbly_signature and not require_pabbly_signature:
+        logger.warning("Pabbly signature not supplied; Paystack transaction verification remains required")
+        return
+    if not paystack_webhook_secret and not pabbly_webhook_secret:
+        return
     raise HTTPException(status_code=401, detail="Invalid or missing webhook signature")
 
 
