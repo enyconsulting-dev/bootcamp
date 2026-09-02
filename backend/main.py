@@ -20,9 +20,13 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Consulting Offer Bootcamp API", version="0.2.0")
 
+configured_origins = os.getenv(
+    "FRONTEND_ORIGINS",
+    "http://localhost:3000,https://bootcamp-eosin-iota.vercel.app",
+)
 allowed_origins = [
-    origin.strip()
-    for origin in os.getenv("FRONTEND_ORIGINS", "http://localhost:3000").split(",")
+    origin.strip().rstrip("/")
+    for origin in configured_origins.split(",")
     if origin.strip()
 ]
 app.add_middleware(
