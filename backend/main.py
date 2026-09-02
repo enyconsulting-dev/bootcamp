@@ -353,7 +353,7 @@ async def process_paystack_payment(
         if sheets_client and spreadsheet_id:
             sheet_result = sheets_client.append_enrollment(
                 spreadsheet_id,
-                worksheet_name="Enrollments",
+                worksheet_name="Paystack Enrollments",
                 enrollment_data={
                     "email": customer["email"],
                     "full_name": customer["full_name"],

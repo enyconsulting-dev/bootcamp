@@ -123,6 +123,11 @@ vercel.json & package.json     # Frontend config
 |----------|--------|---------|
 | `/webhooks/kajabi` | POST | Receive Kajabi payment events |
 | `/webhooks/paystack` | POST | Receive Paystack events forwarded by Pabbly |
+
+Google Sheets routing:
+- `Enrollments` remains the existing Kajabi enrollment worksheet.
+- `Waitlist` remains the Page 1 waitlist worksheet.
+- `Paystack Enrollments` receives verified Paystack paid enrollments.
 | `/kajabi/sync/purchases` | POST | Manually trigger Kajabi polling |
 | `/enrollments/deliver` | POST | Stripe/Paystack enrollment (existing) |
 | `/health` | GET | Check integration status |
