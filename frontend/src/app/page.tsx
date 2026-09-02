@@ -24,7 +24,7 @@ const included = [
   ["30", "Daily training + tasks", "A short focused training and a specific task every day for 30 days."], ["LIVE", "Saturday coaching", "Live feedback and answers from your coach, with your name on it."], ["GO", "Kickoff call", "Meet your coach and cohort before Day 1 and hit the ground running."], ["KIT", "Templates + worksheets", "Done-for-you materials and execution sprints that cut your build time."], ["CO", "Cohort community", "Accountability partners and peers building in real time alongside you."], ["AI", "AI tools integration", "Use Claude, ChatGPT, Lovable and more to build faster."], ["CALL", "Capstone mock calls", "Practice a real-world client scenario and get direct feedback."], ["GRAD", "Graduation", "Finish with a certificate, a complete offer, and momentum to launch."],
 ];
 const faqs = [
-  ["Is this self-paced or do I have to show up live?", "Both. Daily training is self-paced, while Saturday coaching is live. Replays are available, but the breakthroughs happen when you show up and get feedback."], ["How much time does this actually take?", "Less than one hour per day for the training and task, plus a 60–90 minute Saturday live session."], ["What if I have never consulted before?", "If you have three or more years of professional experience, you have what it takes. The bootcamp teaches you to package and sell that expertise."], ["What is the difference between standard and VIP?", "VIP adds a personal hot-seat offer review, a graded workbook with feedback, and a premium template pack."], ["How does payment work?", "International students pay in USD through Stripe. Nigerian students pay in NGN through Paystack. Currencies are kept separate."], ["What is your refund policy?", "There are no refunds after enrollment because access and bonuses are delivered immediately. Our commitment is to help participants who complete the work and still need to finish their offer."], ["What happens immediately after I enroll?", "You receive login details, the Starter Kit bonus, and cohort community access. Kickoff is September 5 and classes begin September 7."], ["What if I miss a live session?", "Replays will be available, though live attendance is strongly encouraged for feedback and accountability."], ["Do I need prior AI experience?", "No. We show you how to use tools like Claude and ChatGPT in the context of each task."], ["How do I reach support?", "Email support@businessanalysisschool.com. The team typically responds within 24 business hours."],
+  ["Is this self-paced or do I have to show up live?", "Both. Daily training is self-paced, while Saturday coaching is live. Replays are available, but the breakthroughs happen when you show up and get feedback."], ["How much time does this actually take?", "Less than one hour per day for the training and task, plus a 60–90 minute Saturday live session."], ["What if I have never consulted before?", "If you have three or more years of professional experience, you have what it takes. The bootcamp teaches you to package and sell that expertise."], ["What is the difference between standard and VIP?", "VIP adds a personal hot-seat offer review, a graded workbook with feedback, and a premium template pack."], ["How does payment work?", "Your local currency is selected automatically and checkout is handled securely by our payment partner."], ["What is your refund policy?", "There are no refunds after enrollment because access and bonuses are delivered immediately. Our commitment is to help participants who complete the work and still need to finish their offer."], ["What happens immediately after I enroll?", "You receive login details, the Starter Kit bonus, and cohort community access. Kickoff is September 5 and classes begin September 7."], ["What if I miss a live session?", "Replays will be available, though live attendance is strongly encouraged for feedback and accountability."], ["Do I need prior AI experience?", "No. We show you how to use tools like Claude and ChatGPT in the context of each task."], ["How do I reach support?", "Email support@businessanalysisschool.com. The team typically responds within 24 business hours."],
 ];
 
 function getTimeLeft() {
@@ -87,7 +87,10 @@ function useEnrollmentOpen() {
 }
 
 function useVisitorCurrency(): Currency {
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const [currency, setCurrency] = useState<Currency>(() => {
+    if (typeof document === "undefined") return "USD";
+    return document.cookie.match(/(?:^|; )visitor-country=([^;]+)/)?.[1] === "NG" ? "NGN" : "USD";
+  });
   useEffect(() => {
     const country = document.cookie.match(/(?:^|; )visitor-country=([^;]+)/)?.[1];
     const visitorCurrency = country === "NG" ? "NGN" : "USD";
@@ -103,6 +106,7 @@ function Cta({ children = "Enroll now" }: { children?: React.ReactNode }) {
 }
 
 export function EnrollmentPage() {
+  const currency = useVisitorCurrency();
   return (
     <main>
       <section className="hero">

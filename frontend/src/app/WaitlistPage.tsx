@@ -46,7 +46,22 @@ function Video() {
   return <div className="waitlist-video">{playing && videoUrl ? <iframe src={videoUrl} title="A message from Eno" allow="autoplay; encrypted-media" allowFullScreen /> : <button type="button" onClick={() => videoUrl && setPlaying(true)} className="video-poster"><span className="video-play">Play</span><strong>A message from Eno</strong><small>{videoUrl ? "Under 3 minutes. Press play." : "Eno's recorded welcome video will be connected before launch."}</small></button>}</div>;
 }
 
+function useVisitorCurrency(): "USD" | "NGN" {
+  const [currency, setCurrency] = useState<"USD" | "NGN">(() => {
+    if (typeof document === "undefined") return "USD";
+    return document.cookie.match(/(?:^|; )visitor-country=([^;]+)/)?.[1] === "NG" ? "NGN" : "USD";
+  });
+  useEffect(() => {
+    const country = document.cookie.match(/(?:^|; )visitor-country=([^;]+)/)?.[1];
+    const visitorCurrency = country === "NG" ? "NGN" : "USD";
+    setCurrency(visitorCurrency);
+    document.documentElement.dataset.currency = visitorCurrency;
+  }, []);
+  return currency;
+}
+
 export default function WaitlistPage() {
+  const currency = useVisitorCurrency();
   const [form, setForm] = useState({ first_name: "", last_name: "", email: "", country: "", phone: "" });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -73,7 +88,7 @@ export default function WaitlistPage() {
 
     <section className="waitlist-section benefits-section"><div className="waitlist-heading"><p className="waitlist-label dark">Everything inside the bootcamp</p><h2>This isn&apos;t just a course. It&apos;s a 30-day consulting launch system.</h2></div><div className="benefit-grid">{benefits.map(([icon, title, text]) => <article key={title}><span>{icon}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></section>
 
-    <section className="waitlist-section deal-section"><div className="waitlist-heading"><p className="waitlist-label dark">The waitlist deal</p><h2>The best price before anyone else gets it.</h2><p>When enrollment opens, waitlist members get a private 48-hour link before the public knows enrollment is open.</p></div><div className="price-blocks"><article><span>International / USD</span><del>$97</del><strong>$47</strong><b>Save $50</b><small>September 15th - September 22nd</small></article><article><span>Nigeria / NGN</span><del>NGN 53,750</del><strong>NGN 26,875</strong><b>Save NGN 26,875</b><small>September 15th - September 22nd</small></article></div><p className="urgency-line">After September 22nd, the early-bird price is gone. No exceptions and no extensions.</p><a className="waitlist-cta coral-dark" href="#waitlist-form">Join the free waitlist - lock in your early-bird price <b>-&gt;</b><small>No payment now. No obligation.</small></a></section>
+    <section className="waitlist-section deal-section"><div className="waitlist-heading"><p className="waitlist-label dark">The waitlist deal</p><h2>The best price before anyone else gets it.</h2><p>When enrollment opens, waitlist members get a private 48-hour link before the public knows enrollment is open.</p></div><div className="price-blocks">{currency === "NGN" ? <article><span>Nigeria / NGN</span><del>NGN 53,750</del><strong>NGN 26,875</strong><b>Save NGN 26,875</b><small>September 15th - September 22nd</small></article> : <article><span>International / USD</span><del>$97</del><strong>$47</strong><b>Save $50</b><small>September 15th - September 22nd</small></article>}</div><p className="urgency-line">After September 22nd, the early-bird price is gone. No exceptions and no extensions.</p><a className="waitlist-cta coral-dark" href="#waitlist-form">Join the free waitlist - lock in your early-bird price <b>-&gt;</b><small>No payment now. No obligation.</small></a></section>
 
     <section className="waitlist-section reasons-section"><div className="waitlist-heading"><p className="waitlist-label dark">Why join now</p><h2>Five reasons to be on this list before September 15th.</h2></div><div className="reason-list">{reasons.map(([title, text], index) => <article key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div><a className="waitlist-cta coral-dark" href="#waitlist-form">Join the free waitlist <b>-&gt;</b></a></section>
 
