@@ -34,10 +34,10 @@ const faqs = [
   ["What if I have never consulted before?", "If you have three or more years of professional experience, you have what it takes. You need expertise, not previous consulting experience."],
   ["What exactly happens during Week 3?", "You run 10-15 market validation conversations using a structured seven-question script, then refine your offer from genuine market evidence."],
   ["What does the LinkedIn work cover?", "Your headline, summary, featured section, and experience framing are rebuilt around your consulting offer. Content strategy and SEO are outside this bootcamp."],
-  ["How does payment work?", "Your local currency is selected automatically. International checkout uses Stripe and Nigerian checkout uses Paystack."],
-  ["What is the order bump?", "At checkout, you can optionally add the Six-Figure Business Analyst Book, a practical guide to packaging expertise and commanding premium fees."],
+  ["How does payment work?", "Payment accepted in USD and NGN via Stripe and Paystack."],
+  ["Can I get a one-on-one session?", "Yes. You can add an optional one-on-one session with the coach for a fee. Email support@businessanalysisschool.com for more information"],
   ["What is your refund policy?", "There are no refunds once enrollment is complete because digital access and bonuses are delivered immediately. See the guarantee for our do-the-work commitment."],
-  ["What happens immediately after I enroll?", "You receive confirmation and login details, access to the cohort community, and the schedule for orientation, the first session, and graduation."],
+  ["What happens immediately after I enroll?", "First - You receive confirmation and login details and access to the bootcamp platform. Second - your waitlist bonus (online course) is already in your inbox from when you joined the waitlist. If you're enrolling directly, your details include everything you need. Third - you'll be added to the cohort community so you can introduce yourself and meet the people you'll be building alongside for the next 30 days."],
   ["What if I miss a live session?", "Replays are available. Live attendance is strongly encouraged for feedback, accountability, and breakthroughs."],
 ];
 
@@ -112,6 +112,6 @@ export default function EnrollmentSalesPage() {
     <section className="sales-section sales-faq"><div className="sales-heading"><p className="sales-label dark">Questions? We&apos;ve got answers.</p><h2>Everything you need to know before you enroll.</h2></div><div className="sales-faq-grid">{faqs.map(([question, answer]) => <article key={question}><h3>{question}</h3><p>{answer}</p></article>)}</div></section>
 
     <section className="sales-section sales-closing"><div className="sales-narrow"><p className="sales-label">This is your moment</p><h2>Your expertise is worth more than a salary. It&apos;s time to prove it.</h2><p>You have watched people with less experience land the clients because they packaged what they know. That ends in 30 days.</p><ul className="promise-list">{["A positioning statement that makes the right client say: I need to talk to this person", "A one-page consulting offer, packaged and priced", "Evidence from real validation conversations", "A LinkedIn profile positioned for consulting", "A three-minute offer pitch delivered live"].map((item) => <li key={item}>{item}</li>)}</ul><div className="sales-closing-price"><span>{label}</span><strong>{earlyPrice}</strong><del>{regularPrice}</del></div><Countdown /><EnrollmentButton currency={currency} /><p className="sales-legal">Results mentioned are not typical. Individual results will vary by experience, effort, and market conditions. The 30-Day Consulting Offer Bootcamp is a product of ENY Consulting Inc.</p></div></section>
-    <footer className="sales-footer">30-Day Consulting Offer Bootcamp / A product of ENY Consulting Inc. / <a href="mailto:support@businessanalysisschool.com">support@businessanalysisschool.com</a></footer>
+    <footer className="sales-footer">30-Day Consulting Offer Bootcamp / A product of ENY Consulting Inc. / <a href="mailto:support@businessanalysisschool.com">support@businessanalysisschool.com</a>WhatsApp: 09085515969, 09085516252, 09169994482, 09169994483, 09085539380, +15873288469</footer>
   </main>;
 }
