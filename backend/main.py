@@ -106,10 +106,44 @@ class KajabiWebhookPayload(BaseModel):
     timestamp: str
 
 
-def _paystack_reference(payload: dict[str, Any]) -> str | None:
-    data = payload.get("data") if isinstance(payload.get("data"), dict) else payload
-    reference = data.get("reference") or data.get("transaction_reference")
-    return str(reference) if reference else None
+def _normalize_paystack_payload(payload: Any) -> dict[str, Any]:
+    """Normalize Paystack objects and Pabbly list/key-value test payloads."""
+    if isinstance(payload, dict):
+        for nested_key in ("body", "payload", "data"):
+            nested = payload.get(nested_key)
+            if isinstance(nested, list):
+                normalized = _normalize_paystack_payload(nested)
+                return {**payload, **normalized}
+        return payload
+    if isinstance(payload, list):
+        mapped: dict[str, Any] = {}
+        for item in payload:
+            if not isinstance(item, dict):
+                continue
+            key = item.get("key") or item.get("name") or item.get("field")
+            if key and "value" in item:
+                mapped[str(key)] = item["value"]
+            elif any(field in item for field in ("event", "data", "reference", "transaction_reference")):
+                mapped.update(item)
+        return mapped
+    return {}
+
+
+def _paystack_reference(payload: Any) -> str | None:
+    if isinstance(payload, dict):
+        reference = payload.get("reference") or payload.get("transaction_reference")
+        if reference:
+            return str(reference)
+        for value in payload.values():
+            reference = _paystack_reference(value)
+            if reference:
+                return reference
+    elif isinstance(payload, list):
+        for value in payload:
+            reference = _paystack_reference(value)
+            if reference:
+                return reference
+    return None
 
 
 def _verify_paystack_signature(
@@ -240,9 +274,15 @@ async def handle_paystack_webhook(
     except ValueError as error:
         raise HTTPException(status_code=400, detail="Paystack webhook body must be valid JSON") from error
 
-    reference = _paystack_reference(payload)
-    event_id = str(payload.get("id") or reference or hashlib.sha256(raw_body).hexdigest())
-    background_tasks.add_task(process_paystack_payment, payload, event_id, reference)
+    normalized_payload = _normalize_paystack_payload(payload)
+    reference = _paystack_reference(normalized_payload)
+    if not reference:
+        raise HTTPException(
+            status_code=400,
+            detail="Paystack webhook must include data.reference or transaction_reference",
+        )
+    event_id = str(normalized_payload.get("id") or reference or hashlib.sha256(raw_body).hexdigest())
+    background_tasks.add_task(process_paystack_payment, normalized_payload, event_id, reference)
     return {"status": "received", "event_id": event_id}
 
 
