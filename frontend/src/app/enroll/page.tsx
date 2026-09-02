@@ -1,5 +1,5 @@
-import { EnrollmentPage } from "../page";
+import EnrollmentSalesPage from "../EnrollmentSalesPage";
 
 export default function Enroll() {
-  return <EnrollmentPage />;
+  return <EnrollmentSalesPage />;
 }
