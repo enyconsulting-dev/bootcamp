@@ -122,6 +122,7 @@ vercel.json & package.json     # Frontend config
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
 | `/webhooks/kajabi` | POST | Receive Kajabi payment events |
+| `/webhooks/paystack` | POST | Receive Paystack events forwarded by Pabbly |
 | `/kajabi/sync/purchases` | POST | Manually trigger Kajabi polling |
 | `/enrollments/deliver` | POST | Stripe/Paystack enrollment (existing) |
 | `/health` | GET | Check integration status |

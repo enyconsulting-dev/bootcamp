@@ -2,11 +2,12 @@ import os
 import hmac
 import hashlib
 import logging
+import requests
 from datetime import datetime, timezone
 from typing import Optional, Any
 from functools import lru_cache
 
-from fastapi import FastAPI, Header, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Header, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import supabase
@@ -105,6 +106,62 @@ class KajabiWebhookPayload(BaseModel):
     timestamp: str
 
 
+def _paystack_reference(payload: dict[str, Any]) -> str | None:
+    data = payload.get("data") if isinstance(payload.get("data"), dict) else payload
+    reference = data.get("reference") or data.get("transaction_reference")
+    return str(reference) if reference else None
+
+
+def _verify_paystack_signature(
+    raw_body: bytes,
+    paystack_signature: str | None,
+    pabbly_signature: str | None,
+) -> None:
+    paystack_webhook_secret = os.getenv("PAYSTACK_WEBHOOK_SECRET")
+    pabbly_webhook_secret = os.getenv("PABBLY_WEBHOOK_SECRET")
+    if not paystack_webhook_secret and not pabbly_webhook_secret:
+        logger.warning("Paystack webhook signature verification is disabled")
+        return
+    if paystack_webhook_secret and paystack_signature:
+        expected = hmac.new(paystack_webhook_secret.encode(), raw_body, hashlib.sha512).hexdigest()
+        if hmac.compare_digest(paystack_signature, expected):
+            return
+    if pabbly_webhook_secret and pabbly_signature:
+        expected = hmac.new(pabbly_webhook_secret.encode(), raw_body, hashlib.sha256).hexdigest()
+        if hmac.compare_digest(pabbly_signature, expected):
+            return
+    raise HTTPException(status_code=401, detail="Invalid or missing webhook signature")
+
+
+def _verify_paystack_transaction(reference: str) -> dict[str, Any]:
+    secret_key = os.getenv("PAYSTACK_SECRET_KEY")
+    if not secret_key:
+        raise RuntimeError("PAYSTACK_SECRET_KEY is not configured")
+    response = requests.get(
+        f"https://api.paystack.co/transaction/verify/{reference}",
+        headers={"Authorization": f"Bearer {secret_key}"},
+        timeout=15,
+    )
+    response.raise_for_status()
+    result = response.json()
+    transaction = result.get("data") or {}
+    if not result.get("status") or transaction.get("status") != "success":
+        raise RuntimeError("Paystack transaction was not successful")
+    return transaction
+
+
+def _paystack_customer(transaction: dict[str, Any]) -> dict[str, str]:
+    customer = transaction.get("customer") if isinstance(transaction.get("customer"), dict) else {}
+    metadata = transaction.get("metadata") if isinstance(transaction.get("metadata"), dict) else {}
+    return {
+        "email": str(customer.get("email") or transaction.get("email") or ""),
+        "first_name": str(metadata.get("first_name") or ""),
+        "last_name": str(metadata.get("last_name") or ""),
+        "full_name": str(metadata.get("full_name") or ""),
+        "phone": str(customer.get("phone") or metadata.get("phone") or ""),
+    }
+
+
 # ============================================================================
 # STRIPE/PAYSTACK ENDPOINTS (EXISTING)
 # ============================================================================
@@ -167,6 +224,102 @@ def deliver_enrollment(
 # ============================================================================
 # KAJABI WEBHOOK ENDPOINT
 # ============================================================================
+
+@app.post("/webhooks/paystack")
+async def handle_paystack_webhook(
+    request: Request,
+    background_tasks: BackgroundTasks,
+    x_paystack_signature: Optional[str] = Header(None),
+    x_pabbly_webhook_secret: Optional[str] = Header(None),
+) -> dict[str, Any]:
+    """Receive Paystack events directly or forwarded through Pabbly."""
+    raw_body = await request.body()
+    _verify_paystack_signature(raw_body, x_paystack_signature, x_pabbly_webhook_secret)
+    try:
+        payload = await request.json()
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail="Paystack webhook body must be valid JSON") from error
+
+    reference = _paystack_reference(payload)
+    event_id = str(payload.get("id") or reference or hashlib.sha256(raw_body).hexdigest())
+    background_tasks.add_task(process_paystack_payment, payload, event_id, reference)
+    return {"status": "received", "event_id": event_id}
+
+
+async def process_paystack_payment(
+    payload: dict[str, Any], event_id: str, reference: str | None
+) -> None:
+    """Verify and persist a successful Paystack charge from Pabbly."""
+    if payload.get("event") not in (None, "charge.success"):
+        logger.info("Ignoring non-successful Paystack event: %s", payload.get("event"))
+        return
+    if not reference:
+        logger.error("Paystack event has no transaction reference: %s", event_id)
+        return
+    try:
+        supabase_client = get_supabase_client()
+        existing = supabase_client.table("payment_events").select("id").eq(
+            "provider", "paystack"
+        ).eq("provider_event_id", event_id).execute()
+        if existing.data:
+            logger.info("Paystack event %s already processed", event_id)
+            return
+
+        transaction = _verify_paystack_transaction(reference)
+        customer = _paystack_customer(transaction)
+        currency = str(transaction.get("currency", "")).upper()
+        if currency not in {"NGN", "USD"} or not customer["email"]:
+            raise RuntimeError("Paystack transaction is missing a supported currency or email")
+
+        payment_reference = f"paystack-{reference}"
+        enrollment_data = {
+            "email": customer["email"],
+            "first_name": customer["first_name"] or None,
+            "last_name": customer["last_name"] or None,
+            "full_name": customer["full_name"] or None,
+            "phone_number": customer["phone"] or None,
+            "amount_minor": transaction.get("amount"),
+            "currency": currency,
+            "provider": "paystack",
+            "status": "paid",
+            "paid_at": datetime.now(timezone.utc).isoformat(),
+            "payment_reference": payment_reference,
+        }
+        supabase_client.table("enrollments").upsert(
+            enrollment_data, on_conflict="payment_reference"
+        ).execute()
+        supabase_client.table("payment_events").insert({
+            "provider": "paystack",
+            "provider_event_id": event_id,
+            "payment_reference": payment_reference,
+            "event_type": payload.get("event", "charge.success"),
+            "payload": payload,
+            "received_at": datetime.now(timezone.utc).isoformat(),
+            "processed_at": datetime.now(timezone.utc).isoformat(),
+        }).execute()
+
+        sheets_client = get_google_sheets_client()
+        spreadsheet_id = os.getenv("GOOGLE_SHEETS_SPREADSHEET_ID")
+        if sheets_client and spreadsheet_id:
+            sheet_result = sheets_client.append_enrollment(
+                spreadsheet_id,
+                worksheet_name="Enrollments",
+                enrollment_data={
+                    "email": customer["email"],
+                    "full_name": customer["full_name"],
+                    "phone": customer["phone"],
+                    "amount": transaction.get("amount"),
+                    "currency": currency,
+                    "status": "paid",
+                    "payment_reference": payment_reference,
+                    "source": "paystack",
+                },
+            )
+            if sheet_result.get("status") != "success":
+                raise RuntimeError(sheet_result.get("error", "Enrollment sheet write failed"))
+        logger.info("Processed Paystack payment %s", reference)
+    except Exception:
+        logger.error("Error processing Paystack payment %s", reference, exc_info=True)
 
 @app.post("/webhooks/kajabi")
 async def handle_kajabi_webhook(

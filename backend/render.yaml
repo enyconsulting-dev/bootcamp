@@ -7,3 +7,7 @@ services:
     envVars:
       - key: FRONTEND_ORIGINS
         sync: false
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      - key: PABBLY_WEBHOOK_SECRET
+        sync: false
