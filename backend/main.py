@@ -131,10 +131,14 @@ def _normalize_paystack_payload(payload: Any) -> dict[str, Any]:
 
 def _paystack_reference(payload: Any) -> str | None:
     if isinstance(payload, dict):
-        reference = payload.get("reference") or payload.get("transaction_reference")
-        if reference:
-            return str(reference)
-        for value in payload.values():
+        for key, value in payload.items():
+            normalized_key = str(key).lower().replace("-", "_")
+            if normalized_key in {"reference", "transaction_reference", "transactionreference"}:
+                if isinstance(value, (str, int)) and str(value).strip():
+                    return str(value).strip()
+            if normalized_key.endswith(".reference") or normalized_key.endswith(".transaction_reference"):
+                if isinstance(value, (str, int)) and str(value).strip():
+                    return str(value).strip()
             reference = _paystack_reference(value)
             if reference:
                 return reference
@@ -161,14 +165,14 @@ def _verify_paystack_signature(
         expected = hmac.new(paystack_webhook_secret.encode(), raw_body, hashlib.sha512).hexdigest()
         if hmac.compare_digest(paystack_signature, expected):
             return
+        raise HTTPException(status_code=401, detail="Invalid Paystack webhook signature")
     if pabbly_webhook_secret and pabbly_signature:
         expected = hmac.new(pabbly_webhook_secret.encode(), raw_body, hashlib.sha256).hexdigest()
         if hmac.compare_digest(pabbly_signature, expected):
             return
-    if pabbly_webhook_secret and not pabbly_signature and not require_pabbly_signature:
-        logger.warning("Pabbly signature not supplied; Paystack transaction verification remains required")
-        return
-    if not paystack_webhook_secret and not pabbly_webhook_secret:
+        raise HTTPException(status_code=401, detail="Invalid Pabbly webhook signature")
+    if not require_pabbly_signature:
+        logger.warning("Pabbly signature not supplied or not verified; Paystack transaction verification remains required")
         return
     raise HTTPException(status_code=401, detail="Invalid or missing webhook signature")
 
