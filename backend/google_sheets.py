@@ -149,6 +149,55 @@ class GoogleSheetsClient:
                 "spreadsheet_id": spreadsheet_id_or_url,
             }
 
+    def append_waitlist_lead(
+        self,
+        spreadsheet_id_or_url: str,
+        worksheet_name: str = "Waitlist",
+        lead_data: Optional[dict] = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        """Append a waitlist lead to its own worksheet in the shared spreadsheet."""
+        try:
+            spreadsheet_id = (
+                spreadsheet_id_or_url.split("/d/")[1].split("/")[0]
+                if "docs.google.com" in spreadsheet_id_or_url
+                else spreadsheet_id_or_url
+            )
+            spreadsheet = self.client.open_by_key(spreadsheet_id)
+            try:
+                worksheet = spreadsheet.worksheet(worksheet_name)
+            except gspread.exceptions.WorksheetNotFound:
+                worksheet = spreadsheet.add_worksheet(title=worksheet_name, rows=1, cols=9)
+                worksheet.append_row([
+                    "Timestamp", "First Name", "Last Name", "Email", "Country",
+                    "Phone (WhatsApp)", "Status", "Source", "Lead ID",
+                ])
+
+            data = lead_data or kwargs
+            row = [
+                datetime.now(timezone.utc).isoformat(),
+                data.get("first_name", ""),
+                data.get("last_name", ""),
+                data.get("email", ""),
+                data.get("country", ""),
+                data.get("phone", ""),
+                data.get("status", "waitlist"),
+                data.get("source", "page-1-waitlist"),
+                data.get("lead_id", ""),
+            ]
+            append_response = worksheet.append_row(
+                row, value_input_option="USER_ENTERED", insert_data_option="INSERT_ROWS"
+            )
+            return {
+                "status": "success",
+                "spreadsheet_id": spreadsheet_id,
+                "worksheet": worksheet_name,
+                "updated_range": append_response.get("updates", {}).get("updatedRange", "unknown"),
+                "timestamp": row[0],
+            }
+        except Exception as e:
+            return {"status": "error", "error": str(e), "spreadsheet_id": spreadsheet_id_or_url}
+
     def batch_append_enrollments(
         self,
         spreadsheet_id_or_url: str,

@@ -80,6 +80,14 @@ class EnrollmentDeliveryRequest(BaseModel):
     vip: bool = False
 
 
+class WaitlistLeadRequest(BaseModel):
+    first_name: str = Field(min_length=1, max_length=100)
+    last_name: str = Field(min_length=1, max_length=100)
+    email: str = Field(min_length=3, max_length=320)
+    country: str = Field(min_length=2, max_length=100)
+    phone: str = Field(min_length=7, max_length=40)
+
+
 class KajabiWebhookPayload(BaseModel):
     """Kajabi webhook payload (schema may vary based on Kajabi documentation)."""
     event_type: str
@@ -96,6 +104,38 @@ class KajabiWebhookPayload(BaseModel):
 # ============================================================================
 # STRIPE/PAYSTACK ENDPOINTS (EXISTING)
 # ============================================================================
+
+@app.post("/waitlist")
+def create_waitlist_lead(request: WaitlistLeadRequest) -> dict[str, str]:
+    """Persist a Page 1 lead in Supabase and the dedicated Waitlist sheet tab."""
+    normalized_email = request.email.strip().lower()
+    lead_data = {
+        "first_name": request.first_name.strip(),
+        "last_name": request.last_name.strip(),
+        "email": normalized_email,
+        "country": request.country.strip(),
+        "phone": request.phone.strip(),
+        "source": "page-1-waitlist",
+        "status": "waitlist",
+    }
+    try:
+        supabase_client = get_supabase_client()
+        response = supabase_client.table("waitlist_leads").insert(lead_data).execute()
+        lead_id = str(response.data[0]["id"])
+
+        sheets_client = get_google_sheets_client()
+        spreadsheet_id = os.getenv("GOOGLE_SHEETS_SPREADSHEET_ID")
+        if not sheets_client or not spreadsheet_id:
+            raise RuntimeError("Google Sheets is not configured")
+        sheet_result = sheets_client.append_waitlist_lead(
+            spreadsheet_id, worksheet_name="Waitlist", lead_data={**lead_data, "lead_id": lead_id}
+        )
+        if sheet_result.get("status") != "success":
+            raise RuntimeError(sheet_result.get("error", "Waitlist sheet write failed"))
+        return {"status": "success", "lead_id": lead_id}
+    except Exception as error:
+        logger.error("Waitlist lead processing failed: %s", error, exc_info=True)
+        raise HTTPException(status_code=502, detail="We could not save your waitlist spot. Please try again.") from error
 
 @app.post("/enrollments/deliver")
 def deliver_enrollment(

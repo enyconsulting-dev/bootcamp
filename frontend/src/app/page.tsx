@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import WaitlistPage from "./WaitlistPage";
 
-const earlyBirdDeadline = new Date("2026-09-03T23:59:00+01:00").getTime();
+const earlyBirdDeadline = new Date("2026-09-22T23:59:00+01:00").getTime();
 const checkoutLinks = {
   usdEarlyBird: process.env.NEXT_PUBLIC_USD_EARLY_BIRD_URL || "#checkout-placeholder",
   usdRegular: process.env.NEXT_PUBLIC_USD_REGULAR_URL || "#checkout-placeholder",
@@ -14,10 +15,10 @@ const checkoutLinks = {
 
 type Currency = "USD" | "NGN";
 const weeks = [
-  { icon: "01", title: "Your Senior Consulting Offer", days: "Days 1–7", deliverable: "The Senior Offer Suite", text: "Define the expertise you are monetizing, identify the client with the expensive problem you solve, and package a high-ticket offer priced for ROI.", bullets: ["The senior consultant mindset shift", "Your expertise and ideal client", "Pricing for the expensive problem", "Proof portfolios and case studies"] },
-  { icon: "02", title: "Authority & Visibility", days: "Days 8–14", deliverable: "LinkedIn Overhaul + First Post", text: "Build the digital presence that makes decision-makers take you seriously before you ever send a message.", bullets: ["Personal branding strategy", "LinkedIn profile mastery", "AI-assisted thought leadership", "Organic networking"] },
-  { icon: "03", title: "Landing Clients", days: "Days 15–21", deliverable: "Outreach Sprint", text: "Build a live lead list and learn to reach decision-makers with value-first messages that feel like a conversation, not spam.", bullets: ["Targeted lead lists", "Value-first outreach", "Your one-sentence value", "Follow-up sequences"] },
-  { icon: "04", title: "Winning the Client", days: "Days 22–30", deliverable: "Proposal + Mock Discovery Call", text: "Learn the discovery call framework, diagnose problems, present solutions, price with confidence, and handle objections.", bullets: ["Discovery call structure", "Diagnosing and presenting", "Discovery to proposal", "Pricing and objections"] },
+  { icon: "01", title: "Position", days: "Days 1–7", deliverable: "Positioning Statement + Problem Set", text: "Define the expertise you are monetizing, identify the client with the expensive problem you solve, and write a positioning statement that makes the right person say: this is exactly what I need.", bullets: ["Consulting mindset shift", "Niche and ideal client definition", "Decision-maker problems", "Your first positioning statement"] },
+  { icon: "02", title: "Package", days: "Days 8–14", deliverable: "One-Page Consulting Offer", text: "Turn your expertise into a defined consulting service with a clear scope, a specific promise, and a price built for ROI.", bullets: ["Packaged service design", "Outcome-based scope", "Value pricing versus hourly", "Your one-page offer"] },
+  { icon: "03", title: "Validate", days: "Days 15–21", deliverable: "10–15 Conversations + Revised Offer", text: "Run real market validation conversations before spending on ads or outreach, then refine your offer from evidence rather than assumption.", bullets: ["Market conversation versus sales call", "Who to approach and how", "The 7-question script", "Reading signals and refining"] },
+  { icon: "04", title: "Prove & Pitch", days: "Days 22–30", deliverable: "3-Minute Offer Pitch Delivered Live", text: "Rebuild your LinkedIn profile around your consulting offer and deliver your three-minute pitch live with direct feedback.", bullets: ["Consultant positioning on LinkedIn", "Headline and summary", "Three-minute offer pitch", "Live delivery and feedback"] },
 ];
 const included = [
   ["30", "Daily training + tasks", "A short focused training and a specific task every day for 30 days."], ["LIVE", "Saturday coaching", "Live feedback and answers from your coach, with your name on it."], ["GO", "Kickoff call", "Meet your coach and cohort before Day 1 and hit the ground running."], ["KIT", "Templates + worksheets", "Done-for-you materials and execution sprints that cut your build time."], ["CO", "Cohort community", "Accountability partners and peers building in real time alongside you."], ["AI", "AI tools integration", "Use Claude, ChatGPT, Lovable and more to build faster."], ["CALL", "Capstone mock calls", "Practice a real-world client scenario and get direct feedback."], ["GRAD", "Graduation", "Finish with a certificate, a complete offer, and momentum to launch."],
@@ -75,6 +76,16 @@ function useEarlyBirdStatus() {
   return isEarlyBird;
 }
 
+function useEnrollmentOpen() {
+  const enrollmentDate = new Date("2026-09-15T00:00:00+01:00").getTime();
+  const [isOpen, setIsOpen] = useState(() => Date.now() >= enrollmentDate);
+  useEffect(() => {
+    const timer = window.setInterval(() => setIsOpen(Date.now() >= enrollmentDate), 1000);
+    return () => window.clearInterval(timer);
+  }, [enrollmentDate]);
+  return isOpen;
+}
+
 function useVisitorCurrency(): Currency {
   const [currency, setCurrency] = useState<Currency>("USD");
   useEffect(() => {
@@ -88,20 +99,20 @@ function useVisitorCurrency(): Currency {
 
 function Cta({ children = "Enroll now" }: { children?: React.ReactNode }) {
   const currency = useVisitorCurrency();
-  return <a className="cta" href="#pricing">{children}<span>{currency === "NGN" ? "Early-bird: ₦25,000 · Nigeria" : "Early-bird: $47 · International"}</span></a>;
+  return <a className="cta" href="#pricing">{children}<span>{currency === "NGN" ? "Early-bird: ₦26,875 · Nigeria" : "Early-bird: $47 · International"}</span></a>;
 }
 
-export default function Home() {
+export function EnrollmentPage() {
   return (
     <main>
       <section className="hero">
         <div className="hero-inner">
-          <p className="eyebrow">Enrollment is open <span /> Kickoff: Sept 5 <span /> Classes: Sept 7</p>
+          <p className="eyebrow">Waitlist members only <span /> Enrollment opens September 15th <span /> Early-bird access</p>
           <div className="hero-copy">
             <p className="kicker">The 30-Day Consulting Offer Bootcamp</p>
             <h1>You have the expertise. <em>You&apos;re just missing the offer.</em></h1>
             <p className="hero-lede">In 30 days, package what you know into a consulting offer that lands real clients, with a system, a community, and a coach holding you accountable every step.</p>
-            <p className="urgency">Early-bird enrollment closes September 3rd. Don&apos;t pay more than you have to.</p>
+            <p className="urgency">Waitlist members get the lowest price before the public.</p>
             <div className="timer-panel">
               <p>Early-bird price ends in <span>WAT</span></p>
               <Countdown />
@@ -143,13 +154,18 @@ export default function Home() {
   );
 }
 
+export default function Home() {
+  return <WaitlistPage />;
+}
+
 function PricingSection() {
   const isEarlyBird = useEarlyBirdStatus();
+  const isEnrollmentOpen = useEnrollmentOpen();
   const currency = useVisitorCurrency();
   const usdPrice = isEarlyBird ? "$47" : "$97";
-  const ngnPrice = isEarlyBird ? "₦25,000" : "₦35,000";
-  const usdUrl = isEarlyBird ? checkoutLinks.usdEarlyBird : checkoutLinks.usdRegular;
-  const ngnUrl = isEarlyBird ? checkoutLinks.ngnEarlyBird : checkoutLinks.ngnRegular;
-  const priceLabel = isEarlyBird ? "Early-bird price · Ends September 3rd" : "Regular enrollment price";
+  const ngnPrice = isEarlyBird ? "₦26,875" : "₦53,750";
+  const usdUrl = isEnrollmentOpen ? (isEarlyBird ? checkoutLinks.usdEarlyBird : checkoutLinks.usdRegular) : "#pricing";
+  const ngnUrl = isEnrollmentOpen ? (isEarlyBird ? checkoutLinks.ngnEarlyBird : checkoutLinks.ngnRegular) : "#pricing";
+  const priceLabel = isEarlyBird ? "Early-bird price · Ends September 22nd" : "Regular enrollment price";
   return <section className="pricing-section" id="pricing"><div className="section-heading"><p className="section-label">Your investment · {currency === "NGN" ? "Nigeria" : "International"}</p><h2>Enroll Now. {isEarlyBird ? "Lock in your early-bird rate." : "Enrollment is at the regular rate."}</h2><p>{isEarlyBird ? "Price increases at midnight on September 3rd." : "Early-bird enrollment has closed."}</p></div><div className="pricing-grid"><article className="price-card"><p className="section-label">International enrollment</p><p className="processor">Checkout via Stripe</p><p className="was">{isEarlyBird ? "$97" : ""}</p><p className="price">{usdPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={usdUrl}>Enroll for {usdPrice} <span>Secure USD checkout</span></a><a className="vip-link" href={checkoutLinks.usdVip}>Add VIP upgrade · +$47</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article><article className="price-card"><p className="section-label">Nigeria enrollment</p><p className="processor">Checkout via Paystack</p><p className="was">{isEarlyBird ? "₦35,000" : ""}</p><p className="price">{ngnPrice}</p><p className="price-note">{priceLabel}</p><ul>{["30 days of daily training + tasks", "Live Saturday coaching", "Templates and worksheets", "Cohort community", "AI tools integration", "Capstone mock calls + graduation", "Starter Kit bonus"].map((x) => <li key={x}>{x}</li>)}</ul><a className="cta" href={ngnUrl}>Enroll for {ngnPrice} <span>Secure NGN checkout</span></a><a className="vip-link" href={checkoutLinks.ngnVip}>Add VIP upgrade · +₦15,000</a><div className="vip">Hot-seat review, graded workbook, premium templates</div></article></div><p className="disclaimer">Results mentioned are not typical. Individual results will vary based on experience, effort, and market conditions.</p></section>;
 }

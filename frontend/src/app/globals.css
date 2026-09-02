@@ -178,6 +178,110 @@ footer a { text-decoration: none; }
 .return-link { display: inline-block; margin-top: 22px; color: var(--navy); font: 700 13px Arial, sans-serif; text-decoration: underline; }
 @keyframes rise-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
+/* Waitlist landing page */
+.waitlist-page { --paper: #fffdf9; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; }
+.waitlist-page h1, .waitlist-page h2, .waitlist-page h3 { font-family: Georgia, "Times New Roman", serif; letter-spacing: 0; }
+.waitlist-hero { background: radial-gradient(circle at 75% 18%, #2c4168, transparent 32rem), var(--navy); color: white; }
+.waitlist-hero-inner { max-width: 1120px; margin: auto; padding: 36px 32px 96px; text-align: center; }
+.waitlist-eyebrow { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 10px 18px; border: 1px solid #c6a24a66; border-radius: 999px; color: #f6d87d; font: 700 11px Arial, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.waitlist-eyebrow i { width: 5px; height: 5px; align-self: center; border-radius: 50%; background: var(--coral); }
+.waitlist-kicker { margin-top: 86px; color: var(--gold); font: 700 12px Arial, sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+.waitlist-hero h1 { max-width: 900px; margin: 22px auto 0; color: white; font-size: clamp(46px, 7vw, 82px); line-height: .98; }
+.waitlist-hero h1 em { color: #f6d87d; font-style: normal; }
+.waitlist-lede { max-width: 650px; margin: 32px auto 0; color: #dce3ee; font-size: 18px; line-height: 1.7; }
+.enrollment-clock { max-width: 470px; margin: 42px auto 28px; padding: 20px; border: 1px solid #c6a24a66; background: #1e2f52; }
+.enrollment-clock p, .enrollment-clock small { color: #dce3ee; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.enrollment-clock small { display: block; margin-top: 14px; color: var(--gold); }
+.waitlist-countdown { display: flex; justify-content: center; gap: 22px; margin-top: 12px; }
+.waitlist-countdown span { display: grid; gap: 3px; min-width: 62px; }
+.waitlist-countdown strong { color: var(--gold); font: 700 36px Arial, sans-serif; }
+.waitlist-countdown small { color: #9ca9bd; font-size: 10px; }
+.waitlist-cta { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-height: 56px; padding: 12px 30px; border: 0; border-radius: 6px; background: var(--coral); color: white; cursor: pointer; font: 700 17px Arial, sans-serif; text-decoration: none; transition: transform .2s, background .2s; }
+.waitlist-cta:hover { background: #e55a47; transform: translateY(-2px); }
+.waitlist-cta small { margin-top: 5px; font-size: 12px; font-weight: 400; }
+.waitlist-cta b { font-weight: 700; }
+.waitlist-trust { flex-wrap: wrap; text-transform: none; letter-spacing: 0; font-size: 13px; }
+.waitlist-section { padding: 104px 32px; }
+.waitlist-heading { max-width: 740px; margin: auto; text-align: center; }
+.waitlist-heading.left { text-align: left; }
+.waitlist-label { color: var(--gold); font: 700 12px Arial, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.waitlist-label.dark { color: var(--navy); }
+.waitlist-heading h2 { margin: 15px 0 0; color: var(--navy); font-size: clamp(32px, 4vw, 52px); line-height: 1.05; }
+.waitlist-heading > p:last-child { margin: 22px auto 0; color: var(--gray); font-size: 17px; line-height: 1.7; }
+.waitlist-video-section, .curriculum-section { background: var(--mist); }
+.waitlist-video { max-width: 760px; margin: 44px auto 0; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #243858, #101a2d); box-shadow: 0 22px 60px #16233f24; }
+.waitlist-video iframe { width: 100%; height: 100%; border: 0; }
+.video-poster { display: grid; place-content: center; width: 100%; height: 100%; border: 0; background: transparent; color: white; cursor: pointer; }
+.video-play { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 20px; border: 2px solid var(--gold); border-radius: 50%; color: var(--gold); font-weight: 700; }
+.video-poster strong { font: 26px Georgia, serif; }
+.video-poster small, .video-caption { margin-top: 9px; color: #b7c0d0; font-size: 13px; }
+.video-caption { color: var(--gray); text-align: center; font-style: italic; }
+.problem-section { background: white; }
+.prose { max-width: 720px; margin: 38px auto 0; color: var(--gray); font-size: 17px; line-height: 1.75; }
+.prose p { margin-top: 22px; }
+.pivot { margin: 42px auto !important; color: var(--navy); font-size: 25px; font-weight: 700; line-height: 1.3; text-align: center; }
+.gold-list, .promise-list { display: grid; gap: 12px; padding: 0; list-style: none; }
+.gold-list li { padding-left: 24px; position: relative; }
+.gold-list li::before { content: "•"; position: absolute; left: 0; color: var(--gold); font-size: 25px; line-height: 1; }
+.coral-dark { margin: 42px auto 0; display: flex; width: fit-content; }
+.promise-section, .deal-section { background: var(--navy); color: white; }
+.promise-section .waitlist-heading h2, .deal-section .waitlist-heading h2 { color: white; }
+.promise-section .waitlist-heading > p:last-child, .deal-section .waitlist-heading > p:last-child { color: #dce3ee; }
+.promise-list { max-width: 720px; margin: 40px auto; }
+.promise-list li { padding: 15px 20px 15px 52px; position: relative; background: #1e2f52; color: white; line-height: 1.5; }
+.promise-list li::before { content: "✓"; position: absolute; left: 20px; color: var(--gold); font-weight: 700; }
+.promise-close { color: #f6d87d; font: italic 700 24px Georgia, serif; text-align: center; }
+.waitlist-week-grid, .benefit-grid, .price-blocks, .reason-list, .testimonial-grid, .instructor-cards { max-width: 1120px; margin: 48px auto 0; display: grid; gap: 18px; }
+.waitlist-week-grid { grid-template-columns: repeat(2, 1fr); }
+.waitlist-week { padding: 30px; border-left: 4px solid var(--gold); background: white; box-shadow: 0 12px 28px #16233f0d; }
+.week-number { color: var(--gold); font: 700 38px Arial, sans-serif; }
+.week-meta { margin: 10px 0; color: var(--gray); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.waitlist-week h3, .benefit-grid h3, .reason-list h3, .instructor-cards h3 { margin: 10px 0; color: var(--navy); font-size: 27px; }
+.waitlist-week p, .waitlist-week li, .benefit-grid p, .reason-list p, .instructor-cards article > p:not(.waitlist-label) { color: var(--gray); line-height: 1.6; }
+.waitlist-week ul { display: grid; gap: 6px; padding-left: 20px; color: var(--gray); }
+.waitlist-week > strong { color: var(--gold); font-size: 14px; }
+.capstone-card { max-width: 1120px; margin: 18px auto 0; padding: 32px; background: var(--navy); color: white; }
+.capstone-card h3, .capstone-card p:not(.waitlist-label) { color: white; }
+.benefits-section, .reasons-section, .proof-section, .instructors-section { background: white; }
+.benefit-grid { grid-template-columns: repeat(2, 1fr); }
+.benefit-grid article { display: flex; gap: 18px; padding: 22px; border: 1px solid #e3e7ed; border-radius: 8px; }
+.benefit-grid article > span { display: grid; place-items: center; flex: 0 0 56px; height: 56px; border: 1px solid var(--gold); color: var(--gold); font-size: 11px; font-weight: 700; }
+.benefit-grid h3 { margin: 0 0 6px; font-size: 22px; }
+.benefit-grid p { margin: 0; }
+.price-blocks { grid-template-columns: repeat(2, 1fr); }
+.price-blocks article { display: grid; gap: 8px; padding: 30px; background: white; color: var(--navy); border-top: 4px solid var(--gold); }
+.price-blocks span, .price-blocks small { color: var(--gray); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+.price-blocks del { color: var(--gray); font-size: 20px; }
+.price-blocks strong { font: 700 54px Georgia, serif; }
+.price-blocks b { color: var(--gold); }
+.urgency-line { margin: 30px auto 0; color: white; text-align: center; font-weight: 700; }
+.reason-list { max-width: 760px; }
+.reason-list article { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #dfe3e9; }
+.reason-list article > span { color: var(--gold); font: 700 13px Arial, sans-serif; }
+.reason-list h3 { margin: 0 0 4px; font-size: 23px; }
+.reason-list p { margin: 0; }
+.testimonial-grid { grid-template-columns: repeat(3, 1fr); }
+.testimonial-grid blockquote { max-width: none; min-height: 180px; margin: 0; padding: 25px; border: 1px solid #e4d19b; background: #fffdf7; }
+.testimonial-grid blockquote span { color: var(--gold); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.testimonial-grid blockquote p { margin-top: 25px; color: var(--navy); font: 700 20px/1.35 Georgia, serif; }
+.instructor-cards { grid-template-columns: repeat(2, 1fr); max-width: 900px; }
+.instructor-cards article { padding: 32px; background: white; box-shadow: 0 15px 35px #16233f16; }
+.instructor-avatar { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 20px; border: 3px solid var(--gold); border-radius: 50%; background: var(--navy); color: #f6d87d; font: 700 28px Georgia, serif; }
+.coach-avatar { background: #58766b; }
+.waitlist-form-section { background: var(--navy); color: white; }
+.waitlist-form-section .waitlist-heading h2 { color: white; }
+.waitlist-form-section .waitlist-heading > p:last-child { color: #dce3ee; }
+.waitlist-form { max-width: 760px; margin: 44px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.waitlist-form label { display: grid; gap: 8px; color: #dce3ee; font-size: 13px; font-weight: 700; }
+.waitlist-form input { width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid #d4dbe6; border-radius: 4px; background: white; color: var(--ink); font-size: 16px; }
+.waitlist-form label:nth-of-type(3), .waitlist-form label:nth-of-type(4), .waitlist-form label:nth-of-type(5), .waitlist-form .waitlist-cta, .form-error { grid-column: 1 / -1; }
+.waitlist-form .waitlist-cta { width: 100%; }
+.waitlist-form button:disabled { cursor: wait; opacity: .7; }
+.form-error { margin: 0; padding: 12px; background: #7b332d; color: white; font-size: 14px; }
+.form-trust { margin: 40px auto -104px; padding: 20px 32px; background: #1e2f52; color: white; text-align: center; font-size: 13px; }
+.waitlist-footer { padding: 28px 32px; background: #101b31; color: #cbd4e2; text-align: center; font-size: 13px; }
+.waitlist-footer a { color: #f6d87d; }
+
 @media (max-width: 700px) {
   .hero-inner { padding: 24px 20px 54px; }
   .eyebrow span { margin: 0 5px 2px; }
@@ -197,4 +301,17 @@ footer a { text-decoration: none; }
   .final-prices { gap: 20px; }
   .final-prices strong { font-size: 29px; }
   footer { flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .waitlist-hero-inner { padding: 24px 20px 68px; }
+  .waitlist-kicker { margin-top: 60px; }
+  .waitlist-hero h1 { font-size: 45px; }
+  .waitlist-lede { font-size: 16px; }
+  .waitlist-section { padding: 68px 20px; }
+  .waitlist-countdown { gap: 8px; }
+  .waitlist-countdown span { min-width: 56px; }
+  .waitlist-countdown strong { font-size: 27px; }
+  .waitlist-week-grid, .benefit-grid, .price-blocks, .testimonial-grid, .instructor-cards, .waitlist-form { grid-template-columns: 1fr; }
+  .waitlist-form label:nth-of-type(3), .waitlist-form label:nth-of-type(4), .waitlist-form label:nth-of-type(5), .waitlist-form .waitlist-cta, .form-error { grid-column: auto; }
+  .waitlist-cta, .coral-dark { width: 100%; text-align: center; }
+  .price-blocks strong { font-size: 44px; }
+  .form-trust { margin-bottom: -68px; padding: 20px; }
 }
