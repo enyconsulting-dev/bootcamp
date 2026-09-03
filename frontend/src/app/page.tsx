@@ -131,7 +131,10 @@ export function EnrollmentPage() {
 
       <section className="video-section">
         <div className="section-heading"><p className="section-label">A message from Eno</p><h2>Before you read another word, watch this first.</h2><p>Three minutes to understand who this is for, what you&apos;ll walk away with, and why now is the moment to stop waiting.</p></div>
-        <div className="video-placeholder" role="img" aria-label="Video placeholder"><div className="play-button">▶</div><p>Welcome to the bootcamp</p><small>Eno&apos;s recorded welcome video will be connected before launch</small></div>
+        <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
+          <iframe src="https://player.vimeo.com/video/1223442001?badge=0&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerPolicy="strict-origin-when-cross-origin" title="UPDATED LANDING PAGE BOOTCAMP VIDEO 2" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 'none' }}></iframe>
+        </div>
+        <script src="https://player.vimeo.com/api/player.js"></script>
       </section>
 
       <section className="curriculum-section" id="curriculum"><div className="section-heading"><p className="section-label">The 30-day curriculum</p><h2>Here&apos;s exactly what you&apos;ll build, week by week.</h2><p>Every week has a theme, daily training, and a real deliverable. By Day 30, the four deliverables combine into your complete consulting launch package.</p></div><div className="week-grid">{weeks.map((week) => <article className="week-card" key={week.icon}><div className="week-number">{week.icon}</div><p className="week-days">{week.days}</p><h3>{week.title}</h3><p>{week.text}</p><ul>{week.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><strong>Deliverable: {week.deliverable}</strong></article>)}</div><div className="capstone"><p className="section-label">Capstone · Graduation</p><h3>Saturday, October 10, 2026</h3><p>Pitch a real scenario, run paired mock discovery calls, and get direct feedback from your coach before taking this to a real client.</p></div><Cta>Enroll now · Build this in 30 days</Cta></section>
