@@ -272,6 +272,9 @@ footer a { text-decoration: none; }
 .testimonial-grid blockquote { max-width: none; min-height: 180px; margin: 0; padding: 25px; border: 1px solid #e4d19b; background: #fffdf7; }
 .testimonial-grid blockquote span { color: var(--gold); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
 .testimonial-grid blockquote p { margin-top: 25px; color: var(--navy); font: 700 20px/1.35 Georgia, serif; }
+.testimonial-image-card { overflow: hidden; margin: 0; border: 1px solid #e4d19b; border-radius: 6px; background: white; box-shadow: 0 12px 28px #16233f0b; transition: transform .25s ease, box-shadow .25s ease; }
+.testimonial-image-card:hover { transform: translateY(-5px); box-shadow: 0 20px 38px #16233f1c; }
+.testimonial-image-card img { display: block; width: 100%; height: auto; }
 .instructor-cards { grid-template-columns: repeat(2, 1fr); max-width: 900px; }
 .instructor-cards article { padding: 32px; background: white; box-shadow: 0 15px 35px #16233f16; }
 .instructor-avatar { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 20px; border: 3px solid var(--gold); border-radius: 50%; background: var(--navy); color: #f6d87d; font: 700 28px Georgia, serif; }
@@ -646,6 +649,9 @@ footer { border-top: 1px solid #ffffff12; }
 .sales-testimonials span { color: var(--sales-gold); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
 .sales-testimonials p { margin-top: 24px; color: var(--sales-navy); font: 700 20px/1.35 Georgia, serif; }
 .sales-testimonials cite { display: block; margin-top: 18px; color: #5b6472; font-size: 12px; font-style: italic; }
+.sales-testimonial-image { overflow: hidden; margin: 0; border: 1px solid #e4d19b; border-radius: 6px; background: white; box-shadow: 0 12px 28px #16233f0b; transition: transform .25s ease, box-shadow .25s ease; }
+.sales-testimonial-image:hover { transform: translateY(-5px); box-shadow: 0 20px 38px #16233f1c; }
+.sales-testimonial-image img { display: block; width: 100%; height: auto; }
 .sales-instructor-grid { grid-template-columns: repeat(2, 1fr); max-width: 900px; }
 .sales-instructor-grid article { padding: 32px; border-left: 4px solid var(--sales-gold); background: white; box-shadow: 0 18px 40px #16233f14; }
 .sales-instructor-grid img { width: 108px; height: 108px; margin-bottom: 20px; border: 3px solid var(--sales-gold); border-radius: 50%; object-fit: cover; object-position: center 28%; box-shadow: 0 0 0 7px #c6a24a12; }
