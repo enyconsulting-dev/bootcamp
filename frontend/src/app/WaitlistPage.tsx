@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 const enrollmentDate = new Date("2026-09-15T00:00:00+01:00").getTime();
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const welcomeVideoUrl = "https://player.vimeo.com/video/1223442001";
 
 const weeks: [string, string, string, string, string, string[]][] = [
   ["01", "POSITION", "Days 1-7", "Positioning Statement + Problem Set", "Stop thinking like an employee and start thinking like a consultant. Define the expertise you are monetizing, the client with the expensive problem, and the statement that makes the right person say: this is exactly what I need.", ["Consulting mindset shift", "Niche and ideal client definition", "Decision-maker problems", "Your first positioning statement draft"]],
@@ -45,19 +46,13 @@ function Countdown() {
 }
 
 function Video() {
-  const [playing, setPlaying] = useState(false);
-  const videoUrl = process.env.NEXT_PUBLIC_WELCOME_VIDEO_URL;
-  return <div className="waitlist-video">{playing && videoUrl ? (
-    <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
-      <iframe src={`${videoUrl}?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479`} allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerPolicy="strict-origin-when-cross-origin" title="A message from Eno" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 'none' }}></iframe>
-    </div>
-  ) : (
-    <button type="button" onClick={() => videoUrl && setPlaying(true)} className="video-poster">
-      <span className="video-play">Play</span>
-      <strong>A message from Eno</strong>
-      <small>{videoUrl ? "Under 3 minutes. Press play." : "Eno's recorded welcome video will be connected before launch."}</small>
-    </button>
-  )}
+  return <div className="waitlist-video">
+    <iframe
+      src={`${welcomeVideoUrl}?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479`}
+      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      title="Eno's recorded welcome video"
+    />
   </div>;
 }
 
