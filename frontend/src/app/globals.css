@@ -187,6 +187,18 @@ footer a { text-decoration: none; }
 
 /* Waitlist landing page */
 .waitlist-page { --paper: #fffdf9; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; }
+.waitlist-page { width: 100%; max-width: 100%; overflow-x: clip; }
+.waitlist-page img, .waitlist-page iframe { max-width: 100%; }
+.waitlist-page .waitlist-week-grid,
+.waitlist-page .benefit-grid,
+.waitlist-page .price-blocks,
+.waitlist-page .testimonial-grid,
+.waitlist-page .instructor-cards { min-width: 0; }
+.waitlist-page .waitlist-week,
+.waitlist-page .benefit-grid article,
+.waitlist-page .price-blocks article,
+.waitlist-page .testimonial-image-card,
+.waitlist-page .instructor-cards article { min-width: 0; overflow-wrap: anywhere; }
 .waitlist-page h1, .waitlist-page h2, .waitlist-page h3 { font-family: Georgia, "Times New Roman", serif; letter-spacing: 0; }
 .waitlist-hero { background: radial-gradient(circle at 75% 18%, #2c4168, transparent 32rem), var(--navy); color: white; }
 .waitlist-hero-inner { max-width: 1120px; margin: auto; padding: 36px 32px 96px; text-align: center; }
@@ -738,4 +750,10 @@ footer { border-top: 1px solid #ffffff12; }
   .waitlist-cta, .coral-dark { width: 100%; text-align: center; }
   .price-blocks strong { font-size: 44px; }
   .form-trust { margin-bottom: -68px; padding: 20px; }
+  .waitlist-page .waitlist-section { width: 100%; max-width: 100vw; overflow-x: clip; }
+  .waitlist-page .waitlist-heading,
+  .waitlist-page .prose,
+  .waitlist-page .waitlist-form { min-width: 0; max-width: 100%; }
+  .waitlist-page .waitlist-hero h1 { overflow-wrap: anywhere; }
+  .waitlist-page .waitlist-cta { max-width: 100%; overflow-wrap: anywhere; }
 }
