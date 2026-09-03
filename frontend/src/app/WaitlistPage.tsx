@@ -47,7 +47,18 @@ function Countdown() {
 function Video() {
   const [playing, setPlaying] = useState(false);
   const videoUrl = process.env.NEXT_PUBLIC_WELCOME_VIDEO_URL;
-  return <div className="waitlist-video">{playing && videoUrl ? <iframe src={videoUrl} title="A message from Eno" allow="autoplay; encrypted-media" allowFullScreen /> : <button type="button" onClick={() => videoUrl && setPlaying(true)} className="video-poster"><span className="video-play">Play</span><strong>A message from Eno</strong><small>{videoUrl ? "Under 3 minutes. Press play." : "Eno's recorded welcome video will be connected before launch."}</small></button>}</div>;
+  return <div className="waitlist-video">{playing && videoUrl ? (
+    <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
+      <iframe src={`${videoUrl}?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479`} allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerPolicy="strict-origin-when-cross-origin" title="A message from Eno" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 'none' }}></iframe>
+    </div>
+  ) : (
+    <button type="button" onClick={() => videoUrl && setPlaying(true)} className="video-poster">
+      <span className="video-play">Play</span>
+      <strong>A message from Eno</strong>
+      <small>{videoUrl ? "Under 3 minutes. Press play." : "Eno's recorded welcome video will be connected before launch."}</small>
+    </button>
+  )}
+  </div>;
 }
 
 function useVisitorCurrency(): "USD" | "NGN" {
