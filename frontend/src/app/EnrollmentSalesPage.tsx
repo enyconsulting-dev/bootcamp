@@ -37,7 +37,7 @@ const faqs = [
   ["How does payment work?", "Payment accepted in USD and NGN via Stripe and Paystack."],
   ["Can I get a one-on-one session?", "Yes. You can add an optional one-on-one session with the coach for a fee. Email support@businessanalysisschool.com for more information"],
   ["What is your refund policy?", "There are no refunds once enrollment is complete because digital access and bonuses are delivered immediately. See the guarantee for our do-the-work commitment."],
-  ["What happens immediately after I enroll?", "First - You receive confirmation and login details and access to the bootcamp platform. Second - your waitlist bonus (online course) is already in your inbox from when you joined the waitlist. If you're enrolling directly, your details include everything you need. Third - you'll be added to the cohort community so you can introduce yourself and meet the people you'll be building alongside for the next 30 days."],
+  ["What happens immediately after I enroll?", "You receive a confirmation email with your login details and access to the bootcamp platform."],
   ["What if I miss a live session?", "Replays are available. Live attendance is strongly encouraged for feedback, accountability, and breakthroughs."],
 ];
 
