@@ -71,12 +71,23 @@ export default function WaitlistPage() {
   const [submitting, setSubmitting] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setError(""); setSubmitting(true);
+    event.preventDefault();
+    // Immediately update state for instant feedback
+    setError("");
+    setSubmitting(true);
+
     try {
       const response = await fetch(`${apiUrl}/waitlist`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      if (!response.ok) { const body = await response.json().catch(() => null); throw new Error(body?.detail || "We could not save your spot. Please try again."); }
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.detail || "We could not save your spot. Please try again.");
+      }
       window.location.assign("/enroll");
-    } catch (submissionError) { setError(submissionError instanceof Error ? submissionError.message : "Something went wrong. Please try again."); setSubmitting(false); }
+    } catch (submissionError) {
+      // Ensure state updates happen even if error occurs
+      setError(submissionError instanceof Error ? submissionError.message : "Something went wrong. Please try again.");
+      setSubmitting(false);
+    }
   }
 
   return <main className="waitlist-page">
