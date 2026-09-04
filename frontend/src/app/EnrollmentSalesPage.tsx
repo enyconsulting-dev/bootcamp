@@ -7,8 +7,10 @@ const earlyBirdDeadline = new Date("2026-09-22T23:59:00+01:00").getTime();
 const checkoutLinks = {
   usdEarlyBird: process.env.NEXT_PUBLIC_USD_EARLY_BIRD_URL || "#checkout-placeholder",
   usdRegular: process.env.NEXT_PUBLIC_USD_REGULAR_URL || "#checkout-placeholder",
+  usdVip: process.env.NEXT_PUBLIC_USD_VIP_URL || "#checkout-placeholder",
   ngnEarlyBird: process.env.NEXT_PUBLIC_NGN_EARLY_BIRD_URL || "#checkout-placeholder",
   ngnRegular: process.env.NEXT_PUBLIC_NGN_REGULAR_URL || "#checkout-placeholder",
+  ngnVip: process.env.NEXT_PUBLIC_NGN_VIP_URL || "#checkout-placeholder",
 };
 const salesVideoUrl = "https://player.vimeo.com/video/1223428650?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&controls=1&progress_bar=1";
 
@@ -72,6 +74,12 @@ function EnrollmentButton({ currency, className = "cta" }: { currency: Currency;
   return <a className={className} href={href}>{open ? `Enroll now - ${price}` : "Notify me when enrollment opens"}<span>{open ? "Secure hosted checkout" : "Enrollment opens September 15th"}</span></a>;
 }
 
+function VipButton({ currency }: { currency: Currency }) {
+  const href = currency === "NGN" ? checkoutLinks.ngnVip : checkoutLinks.usdVip;
+  const price = currency === "NGN" ? "+NGN 15,000" : "+$47";
+  return <a className="vip-link" href={href}>Add VIP upgrade · {price}</a>;
+}
+
 export default function EnrollmentSalesPage() {
   const currency = useCurrency();
   const label = currency === "NGN" ? "NGN" : "USD";
@@ -109,7 +117,7 @@ export default function EnrollmentSalesPage() {
 
     <section className="sales-section sales-instructors"><div className="sales-heading"><p className="sales-label dark">Meet your instructors</p><h2>Built by someone who&apos;s done it. Led by someone who&apos;ll be there every week.</h2></div><div className="sales-instructor-grid"><article><img src="/eno_headshot.jpeg" alt="Eno Eka" /><p className="sales-label dark">Founder</p><h3>Eno Eka</h3><p>CEO, ENY Consulting Inc. and founder of Consulting School and Business Analysis School. Eno has trained over 100,000 professionals across 90+ countries and led a $6 billion digital transformation in Canada.</p><p>Her voice is direct. Her standards are high. Her results speak for themselves.</p></article><article><img src="/coach_jojo.jpeg" alt="Coach Jojo" /><p className="sales-label dark">Lead cohort coach</p><h3>Coach Jojo</h3><p>Coach Jojo is the person who will know your name, know your offer, and push you to finish what you started.</p></article></div></section>
 
-    <section className="sales-section sales-pricing" id="pricing"><div className="sales-heading"><p className="sales-label dark">Your investment</p><h2>Lock in your early-bird rate before September 22nd.</h2><p>The early-bird price is available to waitlist members from September 15th to September 22nd only.</p></div><div className="sales-price-card"><span>{label} enrollment / secure checkout</span><del>{regularPrice}</del><strong>{earlyPrice}</strong><small>Early-bird price - September 15th-22nd only</small><ul>{["30 days of daily training and daily tasks", "Live coaching every Saturday", "Live orientation - October 1, 7PM WAT", "Templates, worksheets, and execution sprints", "Cohort community access", "AI tools integration", "Capstone and graduation", "Waitlist online course bonus"].map((item) => <li key={item}>{item}</li>)}</ul><EnrollmentButton currency={currency} /><p className="disclaimer">Results mentioned are not typical. Individual results will vary by experience, effort, and market conditions.</p></div></section>
+    <section className="sales-section sales-pricing" id="pricing"><div className="sales-heading"><p className="sales-label dark">Your investment</p><h2>Lock in your early-bird rate before September 22nd.</h2><p>The early-bird price is available to waitlist members from September 15th to September 22nd only.</p></div><div className="sales-price-card"><span>{label} enrollment / secure checkout</span><del>{regularPrice}</del><strong>{earlyPrice}</strong><small>Early-bird price - September 15th-22nd only</small><ul>{["30 days of daily training and daily tasks", "Live coaching every Saturday", "Live orientation - October 1, 7PM WAT", "Templates, worksheets, and execution sprints", "Cohort community access", "AI tools integration", "Capstone and graduation", "Waitlist online course bonus"].map((item) => <li key={item}>{item}</li>)}</ul><EnrollmentButton currency={currency} /><VipButton currency={currency} /><p className="disclaimer">Results mentioned are not typical. Individual results will vary by experience, effort, and market conditions.</p></div></section>
 
     <section className="sales-section sales-guarantee"><div className="sales-narrow"><p className="sales-label dark">Our promise to you</p><h2>Do the work. Get the result. That&apos;s the deal.</h2><p>If you attend orientation, complete the four weekly deliverables, show up for at least three live sessions, and deliver your capstone pitch - and still do not have a packaged offer you are confident presenting - contact support within seven days of graduation and we will work with you personally to get you there.</p><div className="guarantee-box"><strong>Show up. Build. Graduate.</strong><p>We do not offer refunds for people who do not do the work. We offer results for people who do.</p></div><p className="support">Questions? <a href="mailto:support@businessanalysisschool.com">support@businessanalysisschool.com</a></p></div></section>
 
