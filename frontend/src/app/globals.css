@@ -600,7 +600,8 @@ footer { border-top: 1px solid #ffffff12; }
 .sales-heading > p:last-child { max-width: 680px; margin: 22px auto 0; color: #5b6472; font-size: 17px; line-height: 1.7; }
 .sales-heading .dark { color: var(--sales-navy); }
 .sales-video, .sales-curriculum, .sales-fit, .sales-proof, .sales-instructors, .sales-pricing, .sales-faq { background: var(--mist); }
-.sales-video .video-placeholder { max-width: 760px; border: 1px solid #c6a24a55; box-shadow: 0 24px 60px #16233f24; }
+.sales-video-frame { position: relative; width: 100%; max-width: 760px; margin: 44px auto 0; aspect-ratio: 16 / 9; border: 1px solid #c6a24a55; background: #101a2d; box-shadow: 0 24px 60px #16233f24; }
+.sales-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .sales-caption { color: #5b6472; text-align: center; }
 .sales-problem, .sales-included { background: white; }
 .sales-prose, .sales-narrow { max-width: 720px; margin: 38px auto 0; color: #5b6472; font-size: 17px; line-height: 1.75; }
@@ -710,7 +711,7 @@ footer { border-top: 1px solid #ffffff12; }
   .sales-timeline { padding-inline: 20px; }
   .sales-timeline .sales-heading { padding-inline: 0; }
   .sales-timeline .sales-map { padding-inline: 0; }
-  .sales-timeline { display: flex; gap: 18px; overflow-x: auto; justify-content: flex-start; padding-bottom: 14px; scrollbar-width: thin; }
+  .sales-page .cta { display: flex; width: min(100%, 480px); margin-inline: auto; }
   .sales-timeline::before { top: 32px; right: 65px; left: 65px; width: 720px; }
   .sales-chain { display: flex; gap: 18px; overflow-x: auto; justify-content: flex-start; padding-bottom: 14px; scrollbar-width: thin; }
   .sales-chain::before { top: 32px; right: 65px; left: 65px; width: 720px; }
