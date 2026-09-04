@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 const enrollmentDate = new Date("2026-09-15T00:00:00+01:00").getTime();
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const welcomeVideoUrl = "https://player.vimeo.com/video/1223442001";
+const welcomeVideoParams = "title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&controls=1&progress_bar=1&share=0&watch_later=0&vimeo_logo=0&dnt=1";
 
 const weeks: [string, string, string, string, string, string[]][] = [
   ["01", "POSITION", "Days 1-7", "Positioning Statement + Problem Set", "Stop thinking like an employee and start thinking like a consultant. Define the expertise you are monetizing, the client with the expensive problem, and the statement that makes the right person say: this is exactly what I need.", ["Consulting mindset shift", "Niche and ideal client definition", "Decision-maker problems", "Your first positioning statement draft"]],
@@ -48,7 +49,7 @@ function Countdown() {
 function Video() {
   return <div className="waitlist-video">
     <iframe
-      src={`${welcomeVideoUrl}?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479`}
+      src={`${welcomeVideoUrl}?${welcomeVideoParams}`}
       allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
       referrerPolicy="strict-origin-when-cross-origin"
       title="Eno's recorded welcome video"

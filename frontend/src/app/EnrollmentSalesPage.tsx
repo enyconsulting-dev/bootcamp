@@ -10,6 +10,7 @@ const checkoutLinks = {
   ngnEarlyBird: process.env.NEXT_PUBLIC_NGN_EARLY_BIRD_URL || "#checkout-placeholder",
   ngnRegular: process.env.NEXT_PUBLIC_NGN_REGULAR_URL || "#checkout-placeholder",
 };
+const salesVideoUrl = "https://player.vimeo.com/video/1223428650?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&controls=1&progress_bar=1";
 
 type Currency = "USD" | "NGN";
 const weeks: [string, string, string, string, string, string, string[]][] = [
@@ -88,7 +89,7 @@ export default function EnrollmentSalesPage() {
     <div className="sales-price-card"><span>{label} early-bird price</span><strong>{earlyPrice}</strong><del>{regularPrice}</del><small>Early-bird closes September 22nd</small><Countdown /></div><EnrollmentButton currency={currency} /><p className="sales-microcopy">Your local price is shown automatically. Secure checkout.</p></div><div className="trust-strip sales-trust"><span>100,000+ professionals trained</span><span>90+ countries</span><span>95% land a client in 90 days</span><span>Secure checkout</span></div></section>
 
     <section className="sales-section sales-video"><div className="sales-heading"><p className="sales-label">From Eno - watch this first</p><h2>You&apos;re on the waitlist. Before you read the rest, watch this.</h2><p>Eno recorded a short message specifically for waitlist members. Under three minutes. Worth every second.</p></div><div className="sales-video-frame">
-          <iframe src="https://player.vimeo.com/video/1223428650?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerPolicy="strict-origin-when-cross-origin" title="UPDATED LANDING PAGE BOOTCAMP VIDEO 3" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 'none' }}></iframe>
+          <iframe src={salesVideoUrl} allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerPolicy="strict-origin-when-cross-origin" title="UPDATED LANDING PAGE BOOTCAMP VIDEO 3" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 'none' }}></iframe>
         </div>
         <script src="https://player.vimeo.com/api/player.js"></script><p className="sales-caption">Watch before you read anything else. It changes how you see what you already have.</p><p className="">When enrollment opens on September 15th, you&apos;ll have 48 hours to enroll at the early-bird price before the public knows enrollment is open. This page shows you exactly what you&apos;re enrolling in.</p></section>
 
